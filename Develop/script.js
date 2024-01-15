@@ -11,33 +11,26 @@ var securePassword = doc.querySelector('#password');
 //       Password either displayed or made and alert on the page. (Displayed)
 //       Define geratePassword function first appeared below writePassword function
 
-
-// prompt(8-128)
-// prompt for length and set it to a var
-// alert( let lowercase = confirm('lowercase?') )
-// alert the var of the confirm() the confirm is OK===true and Cancel===False
-
-
-
-// TODO: Write password to the #password input
-function writePassword() {
-  // var password = generatePassword();
-  var passwordText = doc.querySelector('#password');
+function generatePassword() {
 
   // Criteria
-  // TODO: Add all criteria to generatePassword() function
+  // charLength creates a prompt and defaults to 8 the minimum length.
+  // it then checks if its between 8 and 128 in length if not asks again
   function charLength(){
     let char = prompt('Please choose a length between 8-128 characters.', '8');
 
     if (char >= 8 && char <= 128) {
-      console.log(char);
+      alert('You have requested a ' + char + ' character long password.')
     } else {
       alert('Please Select Number bettwen 8-128');
-      console.log(char);
       charLength();
     }
+
+    return char;
   };
 
+  // Checks
+  // next group of functions create the checks for the Password Generator App
   function lowercase() {
     let lowCase = confirm('Do you require lowercase letters? Press OK for Yes or Cancel for No.');
 
@@ -45,7 +38,7 @@ function writePassword() {
       alert('Lowercase letters added to your Generated Password!');
     }
 
-    console.log(lowCase);
+    return lowCase;
   }
 
   function uppercase() {
@@ -55,7 +48,7 @@ function writePassword() {
       alert('Uppercase letters added to your Generated Password!');
     }
 
-    console.log(upCase);
+    return upCase;
   }
 
   function numeric() {
@@ -65,7 +58,7 @@ function writePassword() {
       alert('Numbers added to your Generated Password!');
     }
 
-    console.log(nums);
+    return nums;
   }
 
   function specialChar() {
@@ -75,17 +68,69 @@ function writePassword() {
       alert('Symbols added to your Generated Password!');
     }
 
-    console.log(special);
+    return special;
   }
 
-  charLength();
-  lowercase();
-  uppercase();
-  numeric();
-  specialChar();
+  // Criteria Variables
+  var characterLength = charLength();
+  var lowerCase = lowercase();
+  var upperCase = uppercase();
+  var numericCharacters = numeric();
+  var specialCharacters = specialChar();
+
+  // Made if statement to make sure at least one check was true to generate a password and if none were questions were asked again
+  if (lowerCase === false && upperCase === false && numericCharacters === false && specialCharacters === false) {
+    alert('Please select at least 1 of the following: Lowercase Letters, Uppercase Letters, Numbers or Symbols.');
+    charLength();
+    lowercase();
+    uppercase();
+    numeric();
+    specialChar();
+  }  
+
+  
+  // generate makes an object of checks to store choices then the default chars are listed
+  // another object for characters is created to store options for program to choose from
+  // conditional operators are used to simplify code if checks are true then add from the options in character object if false then empty options
+  // a newPass is formed and returned
+  function generate() {
+    var checks = {
+      length: characterLength,
+      lowercase: lowerCase,
+      uppercase: upperCase,
+      numbers: numericCharacters,
+      symbols: specialCharacters
+    }
+
+    var defaultCharacters = 'abcdefghijklmnopqrstuvwxyz';
+    var characters = {
+      lowerCase: defaultCharacters,
+      upperCase: defaultCharacters.toUpperCase(),
+      numbers: '0123456789',
+      symbols: '!"#$%&()*+,-./:;<=>?@[]^_`{|}~'
+    }
+    var charList = [
+      checks.lowercase ? characters.lowerCase : [],
+      checks.uppercase ? characters.upperCase : [],
+      checks.numbers ? characters.numbers : [],
+      checks.symbols ? characters.symbols : []
+    ].join('')
+
+    var newPass = Array.from({ length: checks.length }, () => Math.floor(Math.random() * charList.length))
+        .map(number => charList[number])
+        .join('')
+    return newPass;
+  }
+
+  var generatePassword = generate();
+  return generatePassword;
+}
+
+function writePassword() {
+  var password = generatePassword();
+  var passwordText = doc.querySelector('#password');
 
   passwordText.value = password;
 }
 
-// Added event listener to generateBtn to start the writePassword function
 generateBtn.addEventListener('click', writePassword);
