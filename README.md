@@ -1,5 +1,7 @@
 # Password Generator with JS
 
+https://wacwestley30.github.io/PasswordGenerator/
+
 ## Description
 
 This is my Password Generator App using Javascript. I built this app to show what I have been learning recently and how far I have come from my last project. This project really taught me a lot more about objects and functions as a whole and how you can store and manipulate data. 
